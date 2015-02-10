@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   ;; CLJ AND CLJS source code path
-  :source-paths ["src/clj" "src/cljs"]
+  :source-paths ["src/clj" "src/cljs" "src/brepl"]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2755"]
                  [compojure "1.3.1"]
@@ -15,21 +15,43 @@
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-ring "0.9.1"]]
 
+  :ring {:handler modern-cljs.core/handler}
+
   ;;cljsbuild options configuration
   :cljsbuild {:builds
-              ;;  login.js  build
-              {:login
-                {:source-paths ["src/cljs/login"]
-                  :compiler
-                  {:output-to "resources/public/js/login.js"
-                   :optimizations :whitespace
-                   :pretty-print true}}
-               ;; shopping.js build
-               :shopping
-               {:source-paths ["src/cljs/shopping"]
-                :compiler
-                 {:output-to "resources/public/js/shopping.js"
-                  :optimizations :whitespace
-                  :pretty-print true}}}}
+              {:dev
+               {;; clojurescript source code path
+                :source-paths ["src/cljs" "src/brepl"]
 
-  :ring {:handler modern-cljs.core/handler})
+                :compiler {;;the name of the emmited JS script file
+                           :output-to "resources/public/js/modern_dbg.js"
+
+                           ;; minimum :optimization
+                           :optimizations :whitespace
+
+                           ;; prettyfying emitted  JS
+                           :pretty-print true}}
+               :pre-prod
+               {;; clojurescript source code path
+                :source-paths ["src/cljs" "src/brepl"]
+
+                :compiler {;; different output name
+                           :output-to "resources/public/js/modern_pre.js"
+
+                           ;;simple optimization
+                           :optimizations :simple
+
+                           ;; no need to prettyfying
+                           :pretty-print false}}
+               :prod
+               {;; clojurescript source code path
+                :source-paths ["src/cljs"]
+
+                :compiler {;; another output name
+                           :output-to "resources/public/js/modern.js"
+
+                           ;;advanced :optimizations
+                           :optimizations :advanced
+
+                           ;; still no prettyfying
+                           :pretty-print false}}}})
