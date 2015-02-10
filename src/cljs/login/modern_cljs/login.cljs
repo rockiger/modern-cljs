@@ -15,7 +15,7 @@
 
 ;; define the function to attach validate-form to onsubmit
 ;; of the form
-(defn init []
+(defn ^:export init []
   ;; verify that js/document exists and that it has a getElementById
   ;; property
   (if (and js/document
@@ -29,4 +29,4 @@
   (.log js/console "Bla braenrai anetrianet"))
 
 ;;initialize the page
-(set! (.-onload js/window) init)
+;;(set! (.-onload js/window) init)
